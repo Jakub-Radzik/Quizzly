@@ -1,5 +1,4 @@
-import { type ClassValue, clsx } from "clsx"
-import { time } from "console";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -27,4 +26,4 @@ export function convertDateToString(date: Date): string {
   return formattedDate;
 }
 
-export const PRICE_ID: string = price_1PiIJBB8kVMNgJMwrKg8r3HJ;
+export const PRICE_ID: string = "price_1Q8hUCDEaWPOz7quJtUSNAP6";
