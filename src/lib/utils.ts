@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-function roundIfNumber(value: string | number | null) {
+export function roundIfNumber(value: string | number | null) {
   if (typeof value === "number") {
     return parseFloat(value.toFixed(2));
   } else if (typeof value === "string") {

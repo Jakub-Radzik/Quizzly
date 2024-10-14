@@ -23,54 +23,54 @@ type Props = {
   quiz: Quiz;
 };
 
-// const questions = [
-//   {
-//     questionText: "What is React?",
-//     answers: [
-//       {
-//         answerText: "a library for building user interfaces",
-//         isCorrect: true,
-//         id: 1,
-//       },
-//       { answerText: "a front-end framework", isCorrect: false, id: 2 },
-//       { answerText: "a back-end framework", isCorrect: false, id: 3 },
-//       { answerText: "a database", isCorrect: false, id: 4 },
-//     ],
-//   },
-//   {
-//     questionText: "What is JSX?",
-//     answers: [
-//       { answerText: "JavaScript XML", isCorrect: true, id: 1 },
-//       { answerText: "JavaScript", isCorrect: false, id: 2 },
-//       { answerText: "JavaScript and XML", isCorrect: false, id: 3 },
-//       { answerText: "JavaScript and HTML", isCorrect: false, id: 4 },
-//     ],
-//   },
-//   {
-//     questionText: "What is the virtual DOM?",
-//     answers: [
-//       {
-//         answerText: "A virtual representation of the DOM",
-//         isCorrect: true,
-//         id: 1,
-//       },
-//       { answerText: "A real DOM", isCorrect: false, id: 2 },
-//       {
-//         answerText: "A virtual representation of the browser",
-//         isCorrect: false,
-//         id: 3,
-//       },
-//       {
-//         answerText: "A virtual representation of the server",
-//         isCorrect: false,
-//         id: 4,
-//       },
-//     ],
-//   },
-// ];
+const questions = [
+  {
+    questionText: "What is React?",
+    answers: [
+      {
+        answerText: "a library for building user interfaces",
+        isCorrect: true,
+        id: 1,
+      },
+      { answerText: "a front-end framework", isCorrect: false, id: 2 },
+      { answerText: "a back-end framework", isCorrect: false, id: 3 },
+      { answerText: "a database", isCorrect: false, id: 4 },
+    ],
+  },
+  {
+    questionText: "What is JSX?",
+    answers: [
+      { answerText: "JavaScript XML", isCorrect: true, id: 1 },
+      { answerText: "JavaScript", isCorrect: false, id: 2 },
+      { answerText: "JavaScript and XML", isCorrect: false, id: 3 },
+      { answerText: "JavaScript and HTML", isCorrect: false, id: 4 },
+    ],
+  },
+  {
+    questionText: "What is the virtual DOM?",
+    answers: [
+      {
+        answerText: "A virtual representation of the DOM",
+        isCorrect: true,
+        id: 1,
+      },
+      { answerText: "A real DOM", isCorrect: false, id: 2 },
+      {
+        answerText: "A virtual representation of the browser",
+        isCorrect: false,
+        id: 3,
+      },
+      {
+        answerText: "A virtual representation of the server",
+        isCorrect: false,
+        id: 4,
+      },
+    ],
+  },
+];
 
 export default function QuizQuestions(props: Props) {
-  const { questions } = props.quiz;
+  // const { questions } = props.quiz;
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -117,15 +117,15 @@ export default function QuizQuestions(props: Props) {
     setIsCorrect(isCurrentCorrect);
   };
 
-  const handleSubmit = async () => { 
+  const handleSubmit = async () => {
     try {
-    const subId = await saveSubmission({score}, props.quiz.id);
-    } catch(e) {
+      const subId = await saveSubmission({ score }, props.quiz.id);
+    } catch (e) {
       console.log(e);
     }
 
     setSubmitted(true);
-   }
+  };
 
   const handlePressPrev = () => {
     if (currentQuestion! == 0) {
@@ -138,16 +138,16 @@ export default function QuizQuestions(props: Props) {
   };
 
   const scorePercentage: number = Math.round((score / questions.length) * 100);
-  const selectedAnswer: number | null | undefined = userAnswers.find(
-    (item) => item.questionId === questions[currentQuestion].id
-  )?.answerId;
-  const isCorrect: boolean | null = questions[
-    currentQuestion
-  ].answers.findIndex((answer) => answer.id === selectedAnswer)
-    ? questions[currentQuestion].answers.find(
-        (answer) => answer.id === selectedAnswer
-      )?.isCorrect
-    : null;
+  // const selectedAnswer: number | null | undefined = userAnswers.find(
+  //   (item) => item.questionId === questions[currentQuestion].id
+  // )?.answerId;
+  // const isCorrect: boolean | null = questions[
+  //   currentQuestion
+  // ].answers.findIndex((answer) => answer.id === selectedAnswer)
+  //   ? questions[currentQuestion].answers.find(
+  //       (answer) => answer.id === selectedAnswer
+  //     )?.isCorrect
+  //   : null;
 
   if (submitted) {
     return (
@@ -162,21 +162,11 @@ export default function QuizQuestions(props: Props) {
     <div className="flex flex-col flex-1">
       <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
         <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={handlePressPrev}
-          >
+          <Button size="icon" variant="outline" onClick={handlePressPrev}>
             <ChevronLeft />
           </Button>
           <ProgressBar value={(currentQuestion / questions.length) * 100} />
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={handleExit}
-          >
-            <X />
-          </Button>
+          <Button size="icon" variant="outline" onClick={handleExit}></Button>
         </header>
       </div>
       <main className="flex justify-center flex-1">
@@ -228,19 +218,20 @@ export default function QuizQuestions(props: Props) {
             )?.answerText || ""
           }
         />
-        {
-          currentQuestion === questions.length -1) ? <Button variant ="neo" size="lg" onClick={handleSubmit}>Submit</Button> :
-        }
-        <Button
-          variant="neo"
-          size="lg"
-          onClick={handleNext}
-        >
+
+        {currentQuestion === questions.length - 1 ? (
+          <Button variant="neo" size="lg" onClick={handleSubmit}>
+            Submit
+          </Button>
+        ) : (
+          <div>Empty div tbd</div>
+        )}
+        <Button variant="neo" size="lg" onClick={handleNext}>
           {!started
             ? "Start"
-            // : currentQuestion === questions.length - 1
-            // ? "Submit"
-            : "Next"}
+            : // : currentQuestion === questions.length - 1
+              // ? "Submit"
+              "Next"}
         </Button>
       </footer>
     </div>

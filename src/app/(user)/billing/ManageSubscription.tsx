@@ -25,8 +25,7 @@ const ManageSubscription = () => {
         },
       }).then((res) => res.json());
 
-     router.push(url.url);
-
+      router.push(url.url);
     } catch (error) {
       setLoading(false);
       console.log("subscribe button error", error);
@@ -34,10 +33,7 @@ const ManageSubscription = () => {
   };
 
   return (
-    <Button
-      disabled={loading}
-      onClick={() => {redirectToCustomerPortal}
-    >
+    <Button disabled={loading} onClick={redirectToCustomerPortal}>
       {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

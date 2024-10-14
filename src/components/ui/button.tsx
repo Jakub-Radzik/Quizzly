@@ -1,8 +1,8 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps, cx } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import { clsx } from "clsx";
 
 const neoClasses =
@@ -31,7 +31,10 @@ const buttonVariants = cva(
           neoClasses,
           "bg-green-500 text-primary-foreground border-green-600"
         ),
-        neoDanger: cn(neoClasses, "bg-red-500 text-primary-foreground border-red-600"),
+        neoDanger: cn(
+          neoClasses,
+          "bg-red-500 text-primary-foreground border-red-600"
+        ),
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -51,7 +54,7 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 export const spanVariants = cva(
@@ -68,7 +71,7 @@ export const spanVariants = cva(
         neo: "border-blue-900 bg-primary-shadow",
         neoOutline: "bg-[#6366a7] border-[#6366F6]",
         neoSuccess: "border-green-500 bg-green-600",
-        neoDanger: "border-red-500 bg-red-600"
+        neoDanger: "border-red-500 bg-red-600",
       },
     },
     defaultVariants: {
@@ -77,18 +80,24 @@ export const spanVariants = cva(
   }
 );
 
-
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? Slot : "button";
 
     const containerClass = clsx({
-      relative: variant === "neo" || variant === "neoOutline" || variant ==="neoSuccess" || variant ==="neoDanger"
+      relative:
+        variant === "neo" ||
+        variant === "neoOutline" ||
+        variant === "neoSuccess" ||
+        variant === "neoDanger",
     });
 
     const borderRound = clsx({
       "rounded-full": variant === "neo",
-      "rounded-2xl": variant === "neoOutline" || variant === "neoDanger" || variant === "neoSuccess"
+      "rounded-2xl":
+        variant === "neoOutline" ||
+        variant === "neoDanger" ||
+        variant === "neoSuccess",
     });
 
     return (
@@ -103,7 +112,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </div>
     );
   }
-)
-Button.displayName = "Button"
+);
+Button.displayName = "Button";
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };

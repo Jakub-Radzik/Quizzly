@@ -1,4 +1,4 @@
-import type { Config } from "drizzle-kit";
+// import type { Config } from "drizzle-kit";
 
 export default {
   schema: "./src/db/schema.ts",
@@ -10,4 +10,4 @@ export default {
       process.env.DATABASE_URL ||
       "postgres://postgres:postgres@localhost:5432/postgres",
   },
-} satisfies Config;
+}; // satisfies Config;

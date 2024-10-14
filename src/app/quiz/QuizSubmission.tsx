@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useReward } from "react-rewards";
 import { ChevronLeft, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button"; // Ensure the import path is correct
+import { Button } from "@/components/ui/button";
 
 type Props = {
   scorePercentage: number;
@@ -32,11 +32,7 @@ const QuizSubmission = (props: Props) => {
     <div className="flex flex-col flex-1">
       <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
         <header className="flex items-center justify-between py-2 gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={onHandleBack}
-          >
+          <Button size="icon" variant="outline" onClick={onHandleBack}>
             <ChevronLeft />
           </Button>
           <Button
@@ -70,14 +66,8 @@ const QuizSubmission = (props: Props) => {
         ) : (
           <>
             <div className="flex flex-row gap-8 mt-6">
-              <Bar
-                percentage={scorePercentage}
-                color="green"
-              />
-              <Bar
-                percentage={100 - scorePercentage}
-                color="red"
-              />
+              <Bar percentage={scorePercentage} color="green" />
+              <Bar percentage={100 - scorePercentage} color="red" />
             </div>
             <div className="flex flex-row gap-8">
               <p>{score} correct</p>

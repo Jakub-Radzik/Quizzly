@@ -3,14 +3,14 @@
 import React from "react";
 import Tooltip from "@uiw/react-tooltip";
 import HeatMap from "@uiw/react-heat-map";
-import {convertDateToString} from "@/lib/utils";
+import { convertDateToString } from "@/lib/utils";
 
 type Props = {
-      data: {
-        createdAt: Date;
-        count: number;
-      }[];
-    } undefined;
+  data: {
+    createdAt: Date;
+    count: number;
+  }[];
+};
 
 // const value = [
 //   { date: "2016/01/11", count: 2 },
@@ -30,26 +30,31 @@ type Props = {
 //   { date: "2016/05/08", count: 32 },
 // ];
 
-const panelColors = { 0: '#4b515c', 8: '#7BC96F', 4: '#C6E48B', 12: '239A3B', 32: '#196127' }
+const panelColors = {
+  0: "#4b515c",
+  8: "#7BC96F",
+  4: "#C6E48B",
+  12: "239A3B",
+  32: "#196127",
+};
 
 const SubmissionsHeatMap = (props: Props) => {
-    const formattedDates = props.data.map((item) => ({ date: convertDateToString.(item.createdAt), count:item.count }));
-
-    console.log(formattedDates);
+  console.log(props.data);
+  const formattedDates = props.data.map((item) => ({
+    date: convertDateToString(item.createdAt),
+    count: item.count,
+  }));
 
   return (
     <HeatMap
-      value={formattedDates}
+      value={[]}
       width={600}
       style={{ color: "#888" }}
       startDate={new Date("2024/01/01")}
       rectRender={(props, data) => {
         // if (!data.count) return <rect {...props} />;
         return (
-          <Tooltip
-            placement="top"
-            content={`count: ${data.count || 0}`}
-          >
+          <Tooltip placement="top" content={`count: ${data.count || 0}`}>
             <rect {...props} />
           </Tooltip>
         );
