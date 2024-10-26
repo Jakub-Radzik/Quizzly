@@ -35,6 +35,7 @@ const UploadDoc = () => {
 
       if (res.status === 200) {
         const data = await res.json();
+        console.log(data)
         const quizId = data.quizId;
         console.log(`quiz/${quizId}`);
         router.push(`/quiz/${quizId}`);

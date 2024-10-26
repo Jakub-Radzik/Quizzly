@@ -117,6 +117,8 @@ export const quizzes = pgTable("quizzes", {
     name: text("name"),
     description: text("description"),
     userId: text("user_id").references(() => users.id),
+    sourceDocumentId: text("sourceDocumentId"),
+    sourceDocumentAlias: text("sourceDocumentAlias"),
 });
 
 export const quizzesRelations = relations(quizzes, ({ many, one }) => ({

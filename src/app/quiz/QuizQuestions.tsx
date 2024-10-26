@@ -23,54 +23,9 @@ type Props = {
   quiz: Quiz;
 };
 
-const questions = [
-  {
-    questionText: "What is React?",
-    answers: [
-      {
-        answerText: "a library for building user interfaces",
-        isCorrect: true,
-        id: 1,
-      },
-      { answerText: "a front-end framework", isCorrect: false, id: 2 },
-      { answerText: "a back-end framework", isCorrect: false, id: 3 },
-      { answerText: "a database", isCorrect: false, id: 4 },
-    ],
-  },
-  {
-    questionText: "What is JSX?",
-    answers: [
-      { answerText: "JavaScript XML", isCorrect: true, id: 1 },
-      { answerText: "JavaScript", isCorrect: false, id: 2 },
-      { answerText: "JavaScript and XML", isCorrect: false, id: 3 },
-      { answerText: "JavaScript and HTML", isCorrect: false, id: 4 },
-    ],
-  },
-  {
-    questionText: "What is the virtual DOM?",
-    answers: [
-      {
-        answerText: "A virtual representation of the DOM",
-        isCorrect: true,
-        id: 1,
-      },
-      { answerText: "A real DOM", isCorrect: false, id: 2 },
-      {
-        answerText: "A virtual representation of the browser",
-        isCorrect: false,
-        id: 3,
-      },
-      {
-        answerText: "A virtual representation of the server",
-        isCorrect: false,
-        id: 4,
-      },
-    ],
-  },
-];
-
 export default function QuizQuestions(props: Props) {
-  // const { questions } = props.quiz;
+  const questionsWithAnswers = props.quiz.questions;
+  console.log(questionsWithAnswers);
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -90,9 +45,9 @@ export default function QuizQuestions(props: Props) {
       setStarted(true);
       return;
     }
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < questionsWithAnswers.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      // setSelectedAnswer(null);
+      setSelectedAnswer(null);
       setIsCorrect(null);
     } else {
       setSubmitted(true); // Optionally handle the end of the quiz
@@ -101,7 +56,7 @@ export default function QuizQuestions(props: Props) {
   };
 
   const handleAnswer = (answer: Answer, questionId: number) => {
-    // setSelectedAnswer(answer.id);
+    setSelectedAnswer(answer.id);
     const newUserAnswerArr = [
       ...userAnswers,
       {
@@ -137,7 +92,7 @@ export default function QuizQuestions(props: Props) {
     router.push("/dashboard");
   };
 
-  const scorePercentage: number = Math.round((score / questions.length) * 100);
+  const scorePercentage: number = Math.round((score / questionsWithAnswers.length) * 100);
   // const selectedAnswer: number | null | undefined = userAnswers.find(
   //   (item) => item.questionId === questions[currentQuestion].id
   // )?.answerId;
@@ -154,7 +109,7 @@ export default function QuizQuestions(props: Props) {
       <QuizSubmission
         score={score}
         scorePercentage={scorePercentage}
-        totalQuestions={questions.length}
+        totalQuestions={questionsWithAnswers.length}
       />
     );
   }
@@ -165,7 +120,7 @@ export default function QuizQuestions(props: Props) {
           <Button size="icon" variant="outline" onClick={handlePressPrev}>
             <ChevronLeft />
           </Button>
-          <ProgressBar value={(currentQuestion / questions.length) * 100} />
+          <ProgressBar value={(currentQuestion / questionsWithAnswers.length) * 100} />
           <Button size="icon" variant="outline" onClick={handleExit}></Button>
         </header>
       </div>
@@ -175,29 +130,23 @@ export default function QuizQuestions(props: Props) {
         ) : (
           <div>
             <h2 className="text-3xl font-bold">
-              {questions[currentQuestion].questionText}
+              {questionsWithAnswers[currentQuestion].questionText}
             </h2>
             <div className="grid grid-cols-1 gap-6 mt-6">
-              {questions[currentQuestion].answers.map((answer) => {
+              {questionsWithAnswers[currentQuestion].answers.map((answer) => {
                 const variant =
                   selectedAnswer === answer.id
                     ? answer.isCorrect
-                      ? "neoSucess"
+                      ? "neoSuccess"
                       : "neoDanger"
                     : "neoOutline";
-                selectedAnswer === answer.id
-                  ? answer.isCorrect
-                    ? "neoSuccess"
-                    : "neoDanger"
-                  : "neoOutline";
                 return (
                   <Button
                     key={answer.id}
-                    disabled={!!selectedAnswer !== null}
                     variant={variant}
                     size="xl"
                     onClick={() =>
-                      handleAnswer(answer, questions[currentQuestion].id)
+                      handleAnswer(answer, questionsWithAnswers[currentQuestion].id)
                     }
                     className="disabled:opacity-100"
                   >
@@ -213,13 +162,13 @@ export default function QuizQuestions(props: Props) {
         <ResultCard
           isCorrect={isCorrect}
           correctAnswer={
-            questions[currentQuestion].answers.find(
+            questionsWithAnswers[currentQuestion].answers.find(
               (answer) => answer.isCorrect === true
             )?.answerText || ""
           }
         />
 
-        {currentQuestion === questions.length - 1 ? (
+        {currentQuestion === questionsWithAnswers.length - 1 ? (
           <Button variant="neo" size="lg" onClick={handleSubmit}>
             Submit
           </Button>
@@ -229,9 +178,9 @@ export default function QuizQuestions(props: Props) {
         <Button variant="neo" size="lg" onClick={handleNext}>
           {!started
             ? "Start"
-            : // : currentQuestion === questions.length - 1
-              // ? "Submit"
-              "Next"}
+            : currentQuestion === questionsWithAnswers.length - 1
+            ? "Submit"
+            : "Next"}
         </Button>
       </footer>
     </div>
