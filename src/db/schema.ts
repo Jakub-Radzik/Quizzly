@@ -1,32 +1,13 @@
 import {
-    timestamp,
-    pgTable,
-    text,
-    primaryKey,
-    integer,
-    serial,
-    boolean,
-    pgEnum,
+  timestamp,
+  pgTable,
+  text,
+  primaryKey,
+  integer,
+  serial,
+  boolean,
 } from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
-
-// import {
-//   boolean,
-//   timestamp,
-//   pgTable,
-//   text,
-//   primaryKey,
-//   integer,
-// } from "drizzle-orm/pg-core";
-// import postgres from "postgres";
-// import { drizzle } from "drizzle-orm/postgres-js";
-// import type { AdapterAccountType } from "next-auth/adapters";
-
-// const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle";
-// const pool = postgres(connectionString, { max: 1 });
-
-// export const db = drizzle(pool);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -41,9 +22,8 @@ export const users = pgTable("user", {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-    quizzes: many(quizzes)
-})
-)
+  quizzes: many(quizzes),
+}));
 
 export const accounts = pgTable(
   "account",
@@ -113,46 +93,49 @@ export const authenticators = pgTable(
 );
 
 export const quizzes = pgTable("quizzes", {
-    id: serial("id").primaryKey(),
-    name: text("name"),
-    description: text("description"),
-    userId: text("user_id").references(() => users.id),
-    sourceDocumentId: text("sourceDocumentId"),
-    sourceDocumentAlias: text("sourceDocumentAlias"),
+  id: serial("id").primaryKey(),
+  name: text("name"),
+  description: text("description"),
+  userId: text("user_id").references(() => users.id),
+  sourceDocumentId: text("sourceDocumentId"),
+  sourceDocumentAlias: text("sourceDocumentAlias"),
 });
 
 export const quizzesRelations = relations(quizzes, ({ many, one }) => ({
-    questions: many(questions),
-    submissions: many(quizSubmissions),
+  questions: many(questions),
+  submissions: many(quizSubmissions),
 }));
 
 export const questions = pgTable("questions", {
-    id: serial("id").primaryKey(),
-    questionText: text("question_text"),
-    quizId: integer("quiz_id")
+  id: serial("id").primaryKey(),
+  questionText: text("question_text"),
+  quizId: integer("quiz_id"),
 });
 
 export const questionsRelations = relations(questions, ({ one, many }) => ({
-    quiz: one(quizzes, {
-        fields: [questions.quizId],
-        references: [quizzes.id]
-    }),
-    answers: many(questionAnswers),
+  quiz: one(quizzes, {
+    fields: [questions.quizId],
+    references: [quizzes.id],
+  }),
+  answers: many(questionAnswers),
 }));
 
 export const questionAnswers = pgTable("answers", {
-    id: serial("id").primaryKey(),
-    questionId: integer("question_id"),
-    answerText: text("answer_text"),
-    isCorrect: boolean("is_correct"),
+  id: serial("id").primaryKey(),
+  questionId: integer("question_id"),
+  answerText: text("answer_text"),
+  isCorrect: boolean("is_correct"),
 });
 
-export const questionAnswerRelations = relations(questionAnswers, ({ one }) => ({
+export const questionAnswerRelations = relations(
+  questionAnswers,
+  ({ one }) => ({
     question: one(questions, {
-        fields: [questionAnswers.questionId],
-        references: [questions.id]
-    })
-}))
+      fields: [questionAnswers.questionId],
+      references: [questions.id],
+    }),
+  })
+);
 
 export const quizSubmissions = pgTable("quiz_submissions", {
   id: serial("id").primaryKey(),
