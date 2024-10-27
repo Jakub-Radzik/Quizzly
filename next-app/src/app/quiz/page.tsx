@@ -112,7 +112,7 @@ export default function Home() {
       <div className="h-[70vh] max-h-[700px] flex flex-col justify-between">
         <main className="flex justify-center">
           {!started ? (
-            <h1 className="text-3xl font-bold">Welcome to Quiz Time! 👋</h1>
+            <h1 className="text-3xl font-bold">Start quiz below</h1>
           ) : (
             <div>
               <h2 className="text-3xl font-bold">

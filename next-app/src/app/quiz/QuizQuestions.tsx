@@ -92,7 +92,9 @@ export default function QuizQuestions(props: Props) {
     router.push("/dashboard");
   };
 
-  const scorePercentage: number = Math.round((score / questionsWithAnswers.length) * 100);
+  const scorePercentage: number = Math.round(
+    (score / questionsWithAnswers.length) * 100
+  );
   // const selectedAnswer: number | null | undefined = userAnswers.find(
   //   (item) => item.questionId === questions[currentQuestion].id
   // )?.answerId;
@@ -120,13 +122,15 @@ export default function QuizQuestions(props: Props) {
           <Button size="icon" variant="outline" onClick={handlePressPrev}>
             <ChevronLeft />
           </Button>
-          <ProgressBar value={(currentQuestion / questionsWithAnswers.length) * 100} />
+          <ProgressBar
+            value={(currentQuestion / questionsWithAnswers.length) * 100}
+          />
           <Button size="icon" variant="outline" onClick={handleExit}></Button>
         </header>
       </div>
       <main className="flex justify-center flex-1">
         {!started ? (
-          <h1 className="text-3xl font-bold">Welcome to Quiz Time! 👋</h1>
+          <h1 className="text-3xl font-bold">Start quiz below</h1>
         ) : (
           <div>
             <h2 className="text-3xl font-bold">
@@ -146,7 +150,10 @@ export default function QuizQuestions(props: Props) {
                     variant={variant}
                     size="xl"
                     onClick={() =>
-                      handleAnswer(answer, questionsWithAnswers[currentQuestion].id)
+                      handleAnswer(
+                        answer,
+                        questionsWithAnswers[currentQuestion].id
+                      )
                     }
                     className="disabled:opacity-100"
                   >
