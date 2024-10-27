@@ -14,7 +14,7 @@ interface SaveQuizData extends Quiz {
   questions: Array<Question & { answers?: Answer[] }>;
 }
 
-export default async function saveQuiz(quizData: SaveQuizData) {
+export default async function saveQuiz(quizData: SaveQuizData, file_id: string, file_name: string) {
   const { name, description, questions } = quizData;
 
   const newQuizz = await db
@@ -22,6 +22,8 @@ export default async function saveQuiz(quizData: SaveQuizData) {
     .values({
       name,
       description,
+      sourceDocumentId: file_id,
+      sourceDocumentAlias: file_name,
     })
 
     .returning({ insertedId: quizzes.id });
