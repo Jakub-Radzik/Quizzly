@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  # next-app:
+  #   build:
+  #     context: ./next-app
+  #   container_name: next-app
+  #   restart: always
+  #   ports:
+  #     - '3001:3000'  # Expose Next.js app on port 3001
+  #   environment:
+  #     - NODE_ENV=production
+  #   volumes:
+  #     - ./next-app:/app  # Mount the app folder for development
+  #   networks:
+  #     - app-network
+
+  report-app:
+    build:
+      context: ./report-app
+    container_name: report-app
+    restart: always
+    ports:
+      - "3002:3000" # Expose report-app on port 3002
+    environment:
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - AWS_KEY_ID=${AWS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
