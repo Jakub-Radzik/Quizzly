@@ -37,18 +37,12 @@ const Header = async () => {
     <header>
       <nav className="px-4 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <h1 className="text-3xl font-bold">Quiz AI</h1>
+          <h1 className="text-3xl font-bold">PdfToQuiz</h1>
           <div className="flex gap-2">
-            <Link
-              className="underline"
-              href="/quiz"
-            >
+            <Link className="underline" href="/quiz">
               Sample Quiz
             </Link>
-            <Link
-              className="underline"
-              href="/quiz/new"
-            >
+            <Link className="underline" href="/quiz/new">
               New Quiz
             </Link>
           </div>
@@ -78,10 +72,7 @@ const Header = async () => {
                 </DropdownMenu>
               )}
               <form action={handleSignOut}>
-                <Button
-                  type="submit"
-                  variant="ghost"
-                >
+                <Button type="submit" variant="ghost">
                   Sign Out
                 </Button>
                 {/* there is additional styling for this button around 2:43 of the video. come back to this after other things are resolved */}
@@ -89,10 +80,7 @@ const Header = async () => {
             </div>
           ) : (
             <Link href="/api/auth/signin">
-              <Button
-                variant="link"
-                className="rounded-xl border"
-              >
+              <Button variant="link" className="rounded-xl border">
                 Sign In
               </Button>
             </Link>
