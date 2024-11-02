@@ -12,34 +12,23 @@ type Props = {
   }[];
 };
 
-// const value = [
-//   { date: "2016/01/11", count: 2 },
-//   ...[...Array(17)].map((_, idx) => ({
-//     date: `2016/01/${idx + 10}`,
-//     count: idx,
-//   })),
-//   ...[...Array(17)].map((_, idx) => ({
-//     date: `2016/02/${idx + 10}`,
-//     count: idx,
-//   })),
-//   { date: "2016/04/12", count: 2 },
-//   { date: "2016/05/01", count: 5 },
-//   { date: "2016/05/02", count: 5 },
-//   { date: "2016/05/03", count: 1 },
-//   { date: "2016/05/04", count: 11 },
-//   { date: "2016/05/08", count: 32 },
-// ];
-
 const panelColors = {
-  0: "#4b515c",
-  8: "#7BC96F",
-  4: "#C6E48B",
-  12: "239A3B",
-  32: "#196127",
+  0: "#2f3238",
+  1: "#3f473f",
+  2: "#4f5b49", // Faded green-gray
+  3: "#6b7d4f", // Dark olive green
+  4: "#8fa863", // Muted green
+  5: "#A1C564", // Pale green
+  6: "#B4D875", // Light green
+  7: "#C8E48A", // Light yellow-green
+  8: "#DCEE9C", // Soft yellow
+  9: "#F1F4B1", // Light pale yellow
+  10: "#F6F69B", // Bright yellow-green for the highest values
 };
 
 const SubmissionsHeatMap = (props: Props) => {
-  console.log(props.data);
+  const currentYear = new Date().getFullYear();
+
   const formattedDates = props.data.map((item) => ({
     date: convertDateToString(item.createdAt),
     count: item.count,
@@ -47,19 +36,24 @@ const SubmissionsHeatMap = (props: Props) => {
 
   return (
     <HeatMap
-      value={[]}
-      width={600}
+      value={formattedDates}
+      width={700}
+      rectSize={12}
       style={{ color: "#888" }}
-      startDate={new Date("2024/01/01")}
-      rectRender={(props, data) => {
-        // if (!data.count) return <rect {...props} />;
+      startDate={new Date(`${currentYear}/01/01`)}
+      endDate={new Date(`${currentYear}/12/31`)}
+      panelColors={panelColors}
+      rectRender={(heatmapProps, data) => {
+        const tooltipContent = `${data.count || 0}`;
+
         return (
-          <Tooltip placement="top" content={`count: ${data.count || 0}`}>
-            <rect {...props} />
+          <Tooltip placement="top" content={tooltipContent}>
+            <rect {...heatmapProps} />
           </Tooltip>
         );
       }}
     />
   );
 };
+
 export default SubmissionsHeatMap;
