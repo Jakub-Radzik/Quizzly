@@ -6,6 +6,7 @@ import {
   integer,
   serial,
   boolean,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -139,7 +140,7 @@ export const questionAnswerRelations = relations(
 );
 
 export const quizSubmissions = pgTable("quiz_submissions", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   quizId: integer("quiz_id").references(() => quizzes.id),
   userId: text("user_id").references(() => users.id),
   score: integer("score"),

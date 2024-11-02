@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { quizSubmissions, users } from "@/db/schema";
 import { auth } from "@/auth";
 import { InferInsertModel, and, eq } from "drizzle-orm";
-import { pgEnum } from "drizzle-orm/pg-core";
 
 type Submission = InferInsertModel<typeof quizSubmissions>;
 export async function saveSubmission(sub: Submission, quizId: number) {

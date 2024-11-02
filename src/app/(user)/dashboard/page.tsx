@@ -6,10 +6,10 @@ import QuizzesTable, { Quiz } from "./quizzesTable";
 import getUserMetrics from "@/app/actions/getUserMetrics";
 import getHeatMapData from "@/app/actions/getHeatMapData";
 import MetricCard from "./metricCard";
-import Demo from "./heatMap";
 import SubmissionsHeatMap from "./heatMap";
 import SubscribeBtn from "../billing/SubscribeBtn";
 import { PRICE_ID } from "@/lib/utils";
+import QuizListServer from "./quizListServer";
 
 const page = async () => {
   const session = await auth();
@@ -46,6 +46,7 @@ const page = async () => {
       </div>
       <SubscribeBtn userId={userId} price={PRICE_ID} />
       <QuizzesTable quizzes={userQuizzes} />
+      <QuizListServer />
     </>
   );
 };

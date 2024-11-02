@@ -177,7 +177,7 @@ export default function QuizQuestions(props: Props) {
 
         {currentQuestion === questionsWithAnswers.length - 1 ? (
           <Button variant="neo" size="lg" onClick={handleSubmit}>
-            Submit
+            Submit correct
           </Button>
         ) : (
           <div>Empty div tbd</div>
