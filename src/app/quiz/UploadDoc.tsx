@@ -1,43 +1,40 @@
 "use client";
-import { useState } from "react"; // Corrected import statement
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-const UploadDoc = () => {
+const UploadDoc = ({ userId }: { userId: string }) => {
   const [document, setDocument] = useState<Blob | File | null | undefined>(
     null
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const router = useRouter(); // Correct usage of useRouter
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("prevented default")
 
     if (!document) {
       setError("Please upload a document first");
       return;
     }
-    console.log("document no error")
 
     setIsLoading(true);
     const formData = new FormData();
     formData.append("pdf", document as Blob);
-    console.log("appended pdf")
 
     try {
       const res = await fetch("/api/quiz/generate", {
         method: "POST",
         body: formData,
+        headers: {
+          userId,
+        },
       });
-      console.log("posted")
 
       if (res.status === 200) {
         const data = await res.json();
-        console.log(data)
         const quizId = data.quizId;
-        console.log(`quiz/${quizId}`);
         router.push(`/quiz/${quizId}`);
       }
     } catch (e) {
@@ -51,10 +48,7 @@ const UploadDoc = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <form
-          className="w-full"
-          onSubmit={handleSubmit}
-        >
+        <form className="w-full" onSubmit={handleSubmit}>
           <label
             htmlFor="document"
             className="bg-secondary w-full flex h-20 rounded-md border-4 border-dashed border-blue-900 relative"
@@ -70,11 +64,7 @@ const UploadDoc = () => {
             />
           </label>
           {error && <p className="text-red-600">{error}</p>}
-          <Button
-            size="lg"
-            className="mt-2"
-            type="submit"
-          >
+          <Button size="lg" className="mt-2" type="submit">
             Generate Quiz
           </Button>
         </form>

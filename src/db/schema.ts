@@ -23,6 +23,7 @@ export const users = pgTable("user", {
 
 export const userRelations = relations(users, ({ many }) => ({
   quizzes: many(quizzes),
+  submissions: many(quizSubmissions),
 }));
 
 export const accounts = pgTable(
@@ -139,17 +140,23 @@ export const questionAnswerRelations = relations(
 
 export const quizSubmissions = pgTable("quiz_submissions", {
   id: serial("id").primaryKey(),
-  quizId: integer("quiz_id"),
+  quizId: integer("quiz_id").references(() => quizzes.id),
+  userId: text("user_id").references(() => users.id),
   score: integer("score"),
+  attemptNumber: integer("attempt_number").default(1),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const quizSubmissionsRelations = relations(
   quizSubmissions,
-  ({ one, many }) => ({
+  ({ one }) => ({
     quiz: one(quizzes, {
       fields: [quizSubmissions.quizId],
       references: [quizzes.id],
+    }),
+    user: one(users, {
+      fields: [quizSubmissions.userId],
+      references: [users.id],
     }),
   })
 );
