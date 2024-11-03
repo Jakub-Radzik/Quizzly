@@ -12,6 +12,11 @@ type Props = {
   }[];
 };
 
+type GroupedResult = {
+  date: string;
+  count: number;
+}[];
+
 const panelColors = {
   0: "#2f3238",
   1: "#3f473f",
@@ -29,10 +34,26 @@ const panelColors = {
 const SubmissionsHeatMap = (props: Props) => {
   const currentYear = new Date().getFullYear();
 
-  const formattedDates = props.data.map((item) => ({
-    date: convertDateToString(item.createdAt),
-    count: item.count,
-  }));
+  const groupByDate = (data: Props["data"]): GroupedResult => {
+    return data.reduce<GroupedResult>((acc, item) => {
+      const date = convertDateToString(item.createdAt);
+
+      const existingDate = acc.find((entry) => entry.date === date);
+
+      if (existingDate) {
+        existingDate.count += item.count;
+      } else {
+        acc.push({
+          date,
+          count: item.count,
+        });
+      }
+
+      return acc;
+    }, []);
+  };
+
+  const formattedDates = groupByDate(props.data);
 
   return (
     <HeatMap
