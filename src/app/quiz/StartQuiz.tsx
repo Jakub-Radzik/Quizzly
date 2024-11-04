@@ -23,12 +23,21 @@ export const StartQuiz = ({
         <h3 className="text-xl mt-4 text-gray-200">Questions: {quizLength}</h3>
       </div>
 
-      <button
-        onClick={onStart}
-        className="mt-8 w-full py-3 bg-indigo-600 text-white text-lg font-bold rounded-lg hover:bg-indigo-700 transition duration-300"
-      >
-        Start Quiz
-      </button>
+      <div>
+        <button
+          onClick={onStart}
+          className="mt-8 w-full py-3 bg-indigo-600 text-white text-lg font-bold rounded-lg hover:bg-indigo-700 transition duration-300"
+        >
+          Start Quiz
+        </button>
+        <button
+          onClick={() => {}}
+          className="mt-2 w-full py-3 text-white text-lg font-bold rounded-lg 
+          hover:bg-gray-800 border-2 hover:border-gray-200 transition duration-300"
+        >
+          Export Quiz
+        </button>
+      </div>
     </div>
   );
 };
