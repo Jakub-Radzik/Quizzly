@@ -97,7 +97,7 @@ export default function Home() {
     );
   }
   return (
-    <div className="flex flex-col flex-1 h-screen">
+    <div className="flex flex-col flex-1">
       <div className="sticky top-0 z-10 shadow-md py-4 w-full">
         <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
           <Button size="icon" variant="outline">
