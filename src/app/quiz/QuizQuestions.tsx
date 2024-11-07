@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import QuizSubmission from "./QuizSubmission";
 import { InferSelectModel } from "drizzle-orm";
 import {
@@ -25,7 +24,6 @@ type Props = {
 
 export default function QuizQuestions({ quiz }: Props) {
   const questionsWithAnswers = quiz.questions;
-  console.log(questionsWithAnswers);
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -39,21 +37,87 @@ export default function QuizQuestions({ quiz }: Props) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const router = useRouter();
 
+  const isQuestionAnswered = (questionId: number): boolean => {
+    return userAnswers.some((answer) => answer.questionId === questionId);
+  };
+
   const handleNext = () => {
     if (!started) {
       setStarted(true);
       return;
     }
-    if (currentQuestion < questionsWithAnswers.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
+
+    // Check if the current question already has an entry with -1 (no answer was selected)
+    const alreadySkipped = userAnswers.some(
+      (answer) =>
+        answer.questionId === questionsWithAnswers[currentQuestion].id &&
+        answer.answerId === -1
+    );
+
+    // Check if no answer is selected
+    if (selectedAnswer === null) {
+      // If the question was previously skipped (answerId === -1), no delay is applied
+      if (alreadySkipped) {
+        setUserAnswers([
+          ...userAnswers,
+          {
+            questionId: questionsWithAnswers[currentQuestion].id,
+            answerId: -1, // Indicating no answer was selected
+          },
+        ]);
+
+        // Move to the next question without delay
+        if (currentQuestion < questionsWithAnswers.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+          setSelectedAnswer(null); // Reset the selected answer for the next question
+        } else {
+          setSubmitted(true); // Optionally handle the end of the quiz
+        }
+      } else {
+        // If the question was not previously skipped, save no-answer (-1) and delay navigation
+        setUserAnswers([
+          ...userAnswers,
+          {
+            questionId: questionsWithAnswers[currentQuestion].id,
+            answerId: -1, // Indicating no answer was selected
+          },
+        ]);
+
+        // Delay moving to the next question
+        setTimeout(() => {
+          if (currentQuestion < questionsWithAnswers.length - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+            setSelectedAnswer(null); // Reset the selected answer for the next question
+          } else {
+            setSubmitted(true); // Optionally handle the end of the quiz
+          }
+        }, 500); // 1000 ms delay (adjust as needed)
+      }
     } else {
-      setSubmitted(true); // Optionally handle the end of the quiz
-      return;
+      // Save the selected answer and move to the next question immediately
+      setUserAnswers([
+        ...userAnswers,
+        {
+          questionId: questionsWithAnswers[currentQuestion].id,
+          answerId: selectedAnswer,
+        },
+      ]);
+
+      // Move to the next question without delay
+      if (currentQuestion < questionsWithAnswers.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null); // Reset the selected answer for the next question
+      } else {
+        setSubmitted(true); // Optionally handle the end of the quiz
+      }
     }
   };
 
   const handleAnswer = (answer: Answer, questionId: number) => {
+    if (isQuestionAnswered(questionId)) {
+      return;
+    }
+
     setSelectedAnswer(answer.id);
     const newUserAnswerArr = [
       ...userAnswers,
@@ -80,7 +144,7 @@ export default function QuizQuestions({ quiz }: Props) {
   };
 
   const handlePressPrev = () => {
-    if (currentQuestion! == 0) {
+    if (currentQuestion !== 0) {
       setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion - 1);
     }
   };
@@ -144,17 +208,40 @@ export default function QuizQuestions({ quiz }: Props) {
               {questionsWithAnswers[currentQuestion].answers.map((answer) => {
                 const baseButtonStyle =
                   "px-4 py-2 rounded-lg text-white font-semibold focus:outline-none transition";
+
+                const disabled = isQuestionAnswered(
+                  questionsWithAnswers[currentQuestion].id
+                );
+
+                const isCorrectAnswer = answer.isCorrect;
+
                 const selectedStyle =
                   selectedAnswer === answer.id
                     ? answer.isCorrect
-                      ? "border-2 border-green-500 bg-green-500 hover:bg-green-600" // neoSuccess
-                      : "border-2 border-red-500 bg-red-500 hover:bg-red-600" // neoDanger
-                    : "border-2 border-gray-400 bg-background hover:bg-gray-800"; // neoOutline
+                      ? `border-2 border-green-500 bg-green-500 ${
+                          !disabled && "hover:bg-green-600"
+                        }` // neoSuccess
+                      : `border-2 border-red-500 bg-red-500 ${
+                          !disabled && "hover:bg-red-600"
+                        }` // neoDanger
+                    : `border-2 border-gray-400 bg-background ${
+                        !disabled && "hover:bg-gray-800"
+                      }`; // neoOutline
+
+                const correctAnswerStyle =
+                  disabled && isCorrectAnswer
+                    ? "border-2 border-green-500 bg-green-500"
+                    : "";
+
+                const disabledStyles = disabled
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "";
 
                 return (
                   <button
+                    disabled={disabled}
                     key={answer.id}
-                    className={`${baseButtonStyle} ${selectedStyle} py-4`}
+                    className={`${baseButtonStyle} ${selectedStyle} ${correctAnswerStyle} ${disabledStyles} py-4`}
                     onClick={() =>
                       handleAnswer(
                         answer,

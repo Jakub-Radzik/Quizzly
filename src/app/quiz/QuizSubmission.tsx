@@ -2,9 +2,7 @@ import { useEffect } from "react";
 import Bar from "@/components/ui/Bar";
 import Image from "next/image";
 import { useReward } from "react-rewards";
-import { ChevronLeft, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   scorePercentage: number;
@@ -25,28 +23,14 @@ const QuizSubmission = (props: Props) => {
   }, [scorePercentage, reward]);
 
   const onHandleBack = () => {
-    router.back();
+    router.push("/dashboard");
   };
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
-        <header className="flex items-center justify-between py-2 gap-2">
-          <Button size="icon" variant="outline" onClick={onHandleBack}>
-            <ChevronLeft />
-          </Button>
-          <Button
-            size="icon"
-            variant="outline"
-            // onClick={handleExit}
-          >
-            <X />
-          </Button>
-        </header>
-      </div>
       <main className="py-11 flex flex-col gap-4 items-center flex-1 mt-24">
-        <h2 className="text-3xl font-bold">Quiz is complete!</h2>
-        <p>You scored: {scorePercentage}%</p>
+        <h1 className="text-4xl font-bold">Quiz is complete!</h1>
+        <h1 className="text-2xl font-bold">You scored: {scorePercentage}%</h1>
         {scorePercentage === 100 ? (
           <div className="flex flex-col items-center">
             <p>Congratulations!</p>
@@ -59,8 +43,7 @@ const QuizSubmission = (props: Props) => {
                   height={300}
                 />
               </div>
-              <span id="rewardId" />{" "}
-              {/* Ensure the ID matches the useReward ID */}
+              <span id="rewardId" />
             </div>
           </div>
         ) : (
@@ -75,6 +58,14 @@ const QuizSubmission = (props: Props) => {
             </div>
           </>
         )}
+        <div>
+          <button
+            onClick={onHandleBack}
+            className="px-10 mt-8 w-full py-3 bg-indigo-600 text-white text-lg font-bold rounded-lg hover:bg-indigo-700 transition duration-300"
+          >
+            Go to the dashboard
+          </button>
+        </div>
       </main>
     </div>
   );

@@ -1,8 +1,8 @@
-import React from "react"; // Add this if it's not globally available in your project
+import React from "react";
 import { db } from "@/db";
 import { quizzes } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import QuizQuestions from "../QuizQuestions"; // Make sure this is used or remove it if not necessary
+import QuizQuestions from "../QuizQuestions";
 
 const page = async ({
   params,
