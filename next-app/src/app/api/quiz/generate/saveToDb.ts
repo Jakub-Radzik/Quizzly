@@ -9,12 +9,23 @@ import { InferInsertModel } from "drizzle-orm";
 type Quiz = InferInsertModel<typeof quizzes>;
 type Question = InferInsertModel<typeof dbQuestions>;
 type Answer = InferInsertModel<typeof questionAnswers>;
-
 interface SaveQuizData extends Quiz {
   questions: Array<Question & { answers?: Answer[] }>;
 }
 
-export default async function saveQuiz(quizData: SaveQuizData, file_id: string, file_name: string) {
+interface saveQuizPayload {
+  quizData: SaveQuizData;
+  userId: string;
+  file_id: string;
+  file_name: string;
+}
+
+export default async function saveQuiz({
+  quizData,
+  userId,
+  file_id,
+  file_name,
+}: saveQuizPayload) {
   const { name, description, questions } = quizData;
 
   const newQuizz = await db
@@ -24,6 +35,7 @@ export default async function saveQuiz(quizData: SaveQuizData, file_id: string, 
       description,
       sourceDocumentId: file_id,
       sourceDocumentAlias: file_name,
+      userId,
     })
 
     .returning({ insertedId: quizzes.id });

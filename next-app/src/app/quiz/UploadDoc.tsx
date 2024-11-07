@@ -1,43 +1,43 @@
 "use client";
-import { useState } from "react"; // Corrected import statement
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FileUpload } from "@/components/ui/file-upload";
 
-const UploadDoc = () => {
-  const [document, setDocument] = useState<Blob | File | null | undefined>(
-    null
-  );
+const UploadDoc = ({ userId }: { userId: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const router = useRouter(); // Correct usage of useRouter
+  const router = useRouter();
+
+  const [files, setFiles] = useState<File[]>([]);
+  const handleFileUpload = (files: File[]) => {
+    setFiles(files);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("prevented default")
+    const document = files[0];
 
     if (!document) {
       setError("Please upload a document first");
       return;
     }
-    console.log("document no error")
 
     setIsLoading(true);
     const formData = new FormData();
     formData.append("pdf", document as Blob);
-    console.log("appended pdf")
 
     try {
       const res = await fetch("/api/quiz/generate", {
         method: "POST",
         body: formData,
+        headers: {
+          userId,
+        },
       });
-      console.log("posted")
 
       if (res.status === 200) {
         const data = await res.json();
-        console.log(data)
         const quizId = data.quizId;
-        console.log(`quiz/${quizId}`);
         router.push(`/quiz/${quizId}`);
       }
     } catch (e) {
@@ -51,32 +51,17 @@ const UploadDoc = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <form
-          className="w-full"
-          onSubmit={handleSubmit}
-        >
-          <label
-            htmlFor="document"
-            className="bg-secondary w-full flex h-20 rounded-md border-4 border-dashed border-blue-900 relative"
-          >
-            <div className="absolute inset-0 m-auto flex justify-center items-center">
-              {document && document.name ? document.name : "Drag a file here"}
-            </div>
-            <input
-              type="file"
-              id="document"
-              className="relative block w-full h-full z-50 opacity-0"
-              onChange={(e) => setDocument(e?.target?.files?.[0])}
-            />
-          </label>
+        <form className="w-full" onSubmit={handleSubmit}>
+          <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
+            <FileUpload onChange={handleFileUpload} />
+          </div>
           {error && <p className="text-red-600">{error}</p>}
-          <Button
-            size="lg"
-            className="mt-2"
+          <button
             type="submit"
+            className="inline-flex mt-5 h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
           >
             Generate Quiz
-          </Button>
+          </button>
         </form>
       )}
     </div>

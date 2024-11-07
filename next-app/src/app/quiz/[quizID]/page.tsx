@@ -1,20 +1,20 @@
-import React from 'react' // Add this if it's not globally available in your project
-import { db } from '@/db'
-import { quizzes } from '@/db/schema'
-import { eq } from 'drizzle-orm'
-import QuizQuestions from '../QuizQuestions' // Make sure this is used or remove it if not necessary
+import React from "react";
+import { db } from "@/db";
+import { quizzes } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import QuizQuestions from "../QuizQuestions";
 
 const page = async ({
   params,
 }: {
   params: {
-    quizID: string
-  }
+    quizID: string;
+  };
 }) => {
-  const quizId = params.quizID
+  const quizId = params.quizID;
 
   if (!quizId) {
-    return <div>Quiz ID is missing.</div>
+    return <div>Quiz ID is missing.</div>;
   }
 
   const quiz = await db.query.quizzes.findFirst({
@@ -26,15 +26,13 @@ const page = async ({
         },
       },
     },
-  })
-
-  console.log(quiz)
+  });
 
   if (!quizId || !quiz || quiz.questions.length === 0) {
-    return <div>Quiz not found.</div>
+    return <div>Quiz not found.</div>;
   }
 
-  return <QuizQuestions quiz={quiz} />
-}
+  return <QuizQuestions quiz={quiz} />;
+};
 
-export default page
+export default page;

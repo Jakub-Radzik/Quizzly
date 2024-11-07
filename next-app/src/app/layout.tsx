@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Header } from "@/components/ui/ui/header"; //need to fix this
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "PdfToQuiz",
+  title: "Quizzly",
   description: "Generate quizzes and study faster using AI",
 };
 
@@ -18,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="./favicon.ico" />
+      </head>
       <SessionProvider>
         <body className={"dark"}>
           <Header />
