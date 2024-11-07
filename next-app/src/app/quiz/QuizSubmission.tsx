@@ -23,7 +23,7 @@ const QuizSubmission = (props: Props) => {
   }, [scorePercentage, reward]);
 
   const onHandleBack = () => {
-    router.push("/dashboard");
+    router.push("/quiz/new");
   };
 
   return (
@@ -63,7 +63,7 @@ const QuizSubmission = (props: Props) => {
             onClick={onHandleBack}
             className="px-10 mt-8 w-full py-3 bg-indigo-600 text-white text-lg font-bold rounded-lg hover:bg-indigo-700 transition duration-300"
           >
-            Go to the dashboard
+            Restart
           </button>
         </div>
       </main>
