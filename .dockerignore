@@ -1,0 +1,6 @@
+.dockerignore
+
+.next
+.git
+node_modules
+next-app/node_modules

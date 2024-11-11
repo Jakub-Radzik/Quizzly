@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage } from "@langchain/core/messages";
 
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { JsonOutputFunctionsParser } from "langchain/output_parsers";
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf'
+import { JsonOutputFunctionsParser } from 'langchain/output_parsers'
 
 import saveQuiz from "./saveToDb";
 import saveToS3 from "./saveToS3";

@@ -57,8 +57,8 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isCorrect, setIsCorrect] = useState<boolean|null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number|null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handleNext = () => {
@@ -76,7 +76,7 @@ export default function Home() {
     }
   };
 
-  const handleAnswer = (answer) => {
+  const handleAnswer = (answer: {id: number, isCorrect: boolean}) => {
     setSelectedAnswer(answer.id);
     const isCurrentCorrect = answer.isCorrect;
     if (isCurrentCorrect) {
@@ -148,7 +148,7 @@ export default function Home() {
             correctAnswer={
               questions[currentQuestion].answers.find(
                 (answer) => answer.isCorrect
-              )?.answerText
+              )?.answerText || ""
             }
           />
           <Button variant="neo" size="lg" onClick={handleNext}>

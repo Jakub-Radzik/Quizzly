@@ -27,6 +27,7 @@ export default function QuizQuestions({ quiz }: Props) {
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<
     {

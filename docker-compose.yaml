@@ -1,19 +1,28 @@
 version: "3.8"
 
 services:
-  # next-app:
-  #   build:
-  #     context: ./next-app
-  #   container_name: next-app
-  #   restart: always
-  #   ports:
-  #     - '3001:3000'  # Expose Next.js app on port 3001
-  #   environment:
-  #     - NODE_ENV=production
-  #   volumes:
-  #     - ./next-app:/app  # Mount the app folder for development
-  #   networks:
-  #     - app-network
+  next-app:
+    build:
+      context: .
+      dockerfile: ./next-app/Next.Dockerfile
+    container_name: next-app
+    restart: always
+    ports:
+      - '3000:3000'  # Expose Next.js app on port 3000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    container_name: quizzly
+    environment:
+      POSTGRES_DB: quizzly
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   report-app:
     build:
@@ -27,9 +36,6 @@ services:
       - AWS_KEY_ID=${AWS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
-    networks:
-      - app-network
 
-networks:
-  app-network:
-    driver: bridge
+volumes:
+  postgres_data:
