@@ -12,8 +12,36 @@ import {
 import Link from "next/link";
 
 export function NavMenu() {
-  const downloadReport = () => {
-    console.log("download");
+  const downloadReport = async () => {
+    console.log("Starting download...");
+
+    try {
+      const response = await fetch("http://localhost:3002/generate-pdf", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download PDF");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "report.pdf"; // You can specify the desired filename here
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      console.log("Download complete.");
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
   };
   return (
     <DropdownMenu>
