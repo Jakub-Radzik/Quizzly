@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/ui/file-upload";
+import { WavyBackground } from "@/components/ui/wavy-background";
 
 const UploadDoc = ({ userId }: { userId: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -42,14 +43,19 @@ const UploadDoc = ({ userId }: { userId: string }) => {
       }
     } catch (e) {
       console.log("Oops, there was an error while generating the quiz", e);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
     <div className="w-full">
       {isLoading ? (
-        <p>Loading...</p>
+        <WavyBackground>
+          <h1 className="bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl">
+            Przygotowujemy twój quiz
+          </h1>
+        </WavyBackground>
       ) : (
         <form className="w-full" onSubmit={handleSubmit}>
           <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">

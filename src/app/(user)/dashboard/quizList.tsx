@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 interface Submission {
-  id: number;
+  id: string;
   userName: string;
   score: number | null;
   attemptNumber: number;
@@ -13,10 +13,11 @@ interface Submission {
 
 interface QuizData {
   quiz: {
-    id: number;
+    id: string;
     name: string;
     description: string;
     questionCount: number;
+    createdAt: Date;
   };
   submissions: Submission[];
 }
@@ -38,7 +39,8 @@ const QuizList: React.FC<QuizListProps> = ({ quizzes }) => {
             <div className="flex justify-between items-start shadow-md rounded-lg p-1 mb-4">
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-gray-100">
-                  {quizData.quiz.name}
+                  {quizData.quiz.name} -{" "}
+                  {`${new Date(quizData.quiz.createdAt).toLocaleString()}`}
                 </h2>
                 <p
                   className="text-gray-500 mt-2 mb-2"

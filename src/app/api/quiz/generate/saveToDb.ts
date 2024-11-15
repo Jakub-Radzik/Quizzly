@@ -37,8 +37,8 @@ export default async function saveQuiz({
       sourceDocumentAlias: file_name,
       userId,
     })
-
     .returning({ insertedId: quizzes.id });
+
   const quizId = newQuizz[0].insertedId;
 
   await db.transaction(async (tx) => {

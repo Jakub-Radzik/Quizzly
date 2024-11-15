@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { questions, quizSubmissions, quizzes, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import QuizList from "./quizList";
 
 const QuizListServer = async () => {
@@ -8,14 +8,15 @@ const QuizListServer = async () => {
     .select()
     .from(quizzes)
     .leftJoin(quizSubmissions, eq(quizSubmissions.quizId, quizzes.id))
-    .leftJoin(users, eq(users.id, quizSubmissions.userId));
+    .leftJoin(users, eq(users.id, quizSubmissions.userId))
+    .orderBy(desc(quizzes.createdAt));
 
   const questionsForQuiz = await db
     .select()
     .from(quizzes)
     .leftJoin(questions, eq(questions.quizId, quizzes.id));
 
-  const quizMap = new Map<number, { quiz: any; submissions: any[] }>();
+  const quizMap = new Map<string, { quiz: any; submissions: any[] }>();
 
   console.log();
 
@@ -31,6 +32,7 @@ const QuizListServer = async () => {
           questionCount: questionsForQuiz.filter(
             (elem) => elem.quizzes.id === quizId
           ).length,
+          createdAt: item.quizzes.createdAt,
         },
         submissions: [],
       });
