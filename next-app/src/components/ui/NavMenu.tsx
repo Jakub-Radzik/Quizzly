@@ -59,6 +59,12 @@ export function NavMenu() {
               <span>New quiz</span>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/dashboard" className="flex flex-row">
+              <FileText className="mr-2 h-4 w-4" />
+              <span>Dashboard</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={downloadReport}>
             <FileDown className="mr-2 h-4 w-4" />
             <span>Export report</span>

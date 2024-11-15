@@ -18,7 +18,7 @@ const page = async ({
   }
 
   const quiz = await db.query.quizzes.findFirst({
-    where: eq(quizzes.id, parseInt(quizId)),
+    where: eq(quizzes.id, quizId),
     with: {
       questions: {
         with: {

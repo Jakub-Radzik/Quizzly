@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { InferInsertModel, and, eq } from "drizzle-orm";
 
 type Submission = InferInsertModel<typeof quizSubmissions>;
-export async function saveSubmission(sub: Submission, quizId: number) {
+export async function saveSubmission(sub: Submission, quizId: string) {
   const { score } = sub;
   const session = await auth();
   const userId = session?.user?.id;

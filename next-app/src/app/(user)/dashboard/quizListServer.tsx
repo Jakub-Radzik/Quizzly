@@ -15,9 +15,7 @@ const QuizListServer = async () => {
     .from(quizzes)
     .leftJoin(questions, eq(questions.quizId, quizzes.id));
 
-  const quizMap = new Map<number, { quiz: any; submissions: any[] }>();
-
-  console.log();
+  const quizMap = new Map<string, { quiz: any; submissions: any[] }>();
 
   result.forEach((item) => {
     const quizId = item.quizzes.id;

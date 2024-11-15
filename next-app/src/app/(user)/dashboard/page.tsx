@@ -41,7 +41,6 @@ const page = async () => {
       <div>
         {heatMapData ? <SubmissionsHeatMap data={heatMapData.data} /> : null}
       </div>
-      <SubscribeBtn userId={userId} price={PRICE_ID} />
       <QuizListServer />
     </>
   );

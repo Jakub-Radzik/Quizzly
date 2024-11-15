@@ -96,23 +96,28 @@ export const authenticators = pgTable(
 );
 
 export const quizzes = pgTable("quizzes", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(), // Use uuid as the primary key
   name: text("name"),
   description: text("description"),
   userId: text("user_id").references(() => users.id),
   sourceDocumentId: text("sourceDocumentId"),
   sourceDocumentAlias: text("sourceDocumentAlias"),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const quizzesRelations = relations(quizzes, ({ many, one }) => ({
   questions: many(questions),
   submissions: many(quizSubmissions),
+  user: one(users, {
+    fields: [quizzes.userId],
+    references: [users.id],
+  }),
 }));
 
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
   questionText: text("question_text"),
-  quizId: integer("quiz_id"),
+  quizId: uuid("quiz_id").references(() => quizzes.id), // Updated to use UUID for quiz relation
 });
 
 export const questionsRelations = relations(questions, ({ one, many }) => ({
@@ -142,7 +147,7 @@ export const questionAnswerRelations = relations(
 
 export const quizSubmissions = pgTable("quiz_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  quizId: integer("quiz_id").references(() => quizzes.id),
+  quizId: uuid("quiz_id").references(() => quizzes.id), // Updated to use UUID for quiz relation
   userId: text("user_id").references(() => users.id),
   score: integer("score"),
   attemptNumber: integer("attempt_number").default(1),

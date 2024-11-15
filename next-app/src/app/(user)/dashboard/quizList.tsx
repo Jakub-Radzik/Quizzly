@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 interface Submission {
-  id: number;
+  id: string;
   userName: string;
   score: number | null;
   attemptNumber: number;
@@ -13,7 +13,7 @@ interface Submission {
 
 interface QuizData {
   quiz: {
-    id: number;
+    id: string;
     name: string;
     description: string;
     questionCount: number;
