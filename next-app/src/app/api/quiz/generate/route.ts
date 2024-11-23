@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage } from "@langchain/core/messages";
 
-import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf'
-import { JsonOutputFunctionsParser } from 'langchain/output_parsers'
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { JsonOutputFunctionsParser } from "langchain/output_parsers";
 
 import saveQuiz from "./saveToDb";
 import saveToS3 from "./saveToS3";
@@ -43,12 +43,12 @@ export async function POST(req: NextRequest) {
 
     // Save the document to S3
     // ----------------------------------------------------------------------------
-    /* const { file_id, file_name, error } = await saveToS3(document as File) */
-    /* if (error || !file_id || !file_name) { */
-    /*   return NextResponse.json({ error }, { status: 500 }) */
-    /* } */
-    const file_id = "file_id";
-    const file_name = "file_name";
+    const { file_id, file_name, error } = await saveToS3(document as File);
+    if (error || !file_id || !file_name) {
+      return NextResponse.json({ error }, { status: 500 });
+    }
+    // const file_id = "file_id";
+    // const file_name = "file_name";
     console.log("saved to s3");
 
     // Extract the text from the document
