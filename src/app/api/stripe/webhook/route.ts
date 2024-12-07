@@ -1,15 +1,9 @@
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import {
-  createSubscription,
-  deleteSubscription,
-} from "@/app/actions/userSubscriptions";
+import { updateSubscription } from "@/app/actions/userSubscriptions";
 
 const relevantEvents = new Set([
-  "checkout.session.completed",
   "customer.subscription.updated",
-  "customer.subscription.deleted",
-  "customer.subscription.created",
 ]);
 
 export async function POST(req: Request) {
@@ -21,25 +15,29 @@ export async function POST(req: Request) {
 
   if (!sig) return;
 
-  const event = stripe.webhooks.constructEvent(
-    body,
-    sig,
-    process.env.STRIPE_WEBHOOK_SECRET
-  );
+  let stripe_event: Stripe.Event;
 
-  const data = event.data.object as Stripe.Subscription;
+  try{
+    stripe_event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err: any) {
+    return new Response(
+      JSON.stringify({
+        error: err.message,
+      }),
+      { status: 400 }
+    );
+  }
 
-  if (relevantEvents.has(event.type)) {
-    switch (event.type) {
-      case "customer.subscription.created": {
-        await createSubscription({
-          stripeCustomerId: data.customer as string,
-        });
-        break;
-      }
-      case "customer.subscription.deleted": {
-        await deleteSubscription({
-          stripeCustomerId: data.customer as string,
+  if (relevantEvents.has(stripe_event.type)) {
+    switch (stripe_event.type) {
+      case "customer.subscription.updated": {
+        stripe_event = stripe_event as Stripe.CustomerSubscriptionUpdatedEvent;
+        await updateSubscription({
+          event_data: stripe_event.data.object,
         });
         break;
       }

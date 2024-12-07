@@ -1,4 +1,6 @@
+import { sql } from "drizzle-orm";
 import {
+  check,
   timestamp,
   pgTable,
   text,
@@ -10,6 +12,18 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
+export enum Subscriptions {
+  free = "free",
+  standard = "standard",
+  deluxe = "deluxe",
+}
+
+export const SubscriptionsMapping = {
+  "free": "Basic",
+  "standard": "Standard",
+  "deluxe": "Deluxe",
+}
+
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -19,8 +33,14 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   stripeCustomerId: text("stripe_customer_id"),
-  subscribed: boolean("subscribed"),
-});
+  subscription: text("subscription")
+    .notNull()
+    .default(Subscriptions.free)
+  },
+  (table) => ({
+    checkConstraint: check("subscription", sql`${table.subscription} in (${Object.values(Subscriptions)})`),
+  })
+);
 
 export const userRelations = relations(users, ({ many }) => ({
   quizzes: many(quizzes),

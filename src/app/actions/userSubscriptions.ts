@@ -1,39 +1,28 @@
+import Stripe from "stripe";  
+import { stripe } from "@/lib/stripe";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { Subscriptions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export async function createSubscription ({
-    stripeCustomerId
+export async function updateSubscription({
+  event_data,
 }: {
-    stripeCustomerId: string
+  event_data: Stripe.Subscription;
 }) {
-    await db
-    .update(users)
-    .set({
-        subscribed: true,
-    })
-    .where(
-       eq(
-        users.stripeCustomerId,
-        stripeCustomerId
-       ) 
-    )
-}
+  // Get product info from stripe based on subscription id
+  const product_id = event_data.items.data[0].price.product as string;
+  const product = await stripe.products.retrieve(product_id);
+  let subsciptionValue = product.metadata.subscription as Subscriptions;
 
-export async function deleteSubscription ({
-    stripeCustomerId
-}: {
-    stripeCustomerId: string
-}) {
-    await db
-    .update(users)
-    .set({
-        subscribed: false,
-    })
-    .where(
-       eq(
-        users.stripeCustomerId,
-        stripeCustomerId
-       ) 
-    );
-       }
+  if (event_data.status in ["incomplete", "incomplete_expired", "past_due", "cancelled", "unpaid"]) {
+    subsciptionValue = Subscriptions.free;
+  }
+
+  await db.update(users).set({
+    subscription: subsciptionValue,
+  }).where(
+    eq(users.stripeCustomerId, event_data.customer as string)
+  );
+  
+  console.log('');
+}

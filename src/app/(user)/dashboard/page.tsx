@@ -3,8 +3,6 @@ import getUserMetrics from "@/app/actions/getUserMetrics";
 import getHeatMapData from "@/app/actions/getHeatMapData";
 import MetricCard from "./metricCard";
 import SubmissionsHeatMap from "./heatMap";
-import SubscribeBtn from "../billing/SubscribeBtn";
-import { PRICE_ID } from "@/lib/utils";
 import QuizListServer from "./quizListServer";
 import ProfileCard from "./profile";
 
@@ -37,7 +35,6 @@ const page = async () => {
       <div>
         {heatMapData ? <SubmissionsHeatMap data={heatMapData.data} /> : null}
       </div>
-      <SubscribeBtn userId={userId} price={PRICE_ID} />
       <QuizListServer />
     </>
   );

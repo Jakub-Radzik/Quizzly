@@ -8,6 +8,6 @@ export default {
   dbCredentials: {
     url:
       process.env.DATABASE_URL ||
-      "postgres://postgres:postgres@localhost:5432/postgres",
+      "postgres://postgres:postgres@localhost:5432/quizzly",
   },
 }; // satisfies Config;
