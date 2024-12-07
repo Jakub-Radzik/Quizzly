@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Cat, Bot } from "lucide-react";
+import { Bot } from "lucide-react";
 
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import React from "react";

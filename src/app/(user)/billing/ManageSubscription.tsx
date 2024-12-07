@@ -1,14 +1,8 @@
 "use client";
 import { useState } from "react";
-import { getStripe } from "@/lib/stripe-client";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-
-type Props = {
-  userId?: string;
-  price: string;
-};
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 
 const ManageSubscription = () => {
   const router = useRouter();
@@ -33,16 +27,16 @@ const ManageSubscription = () => {
   };
 
   return (
-    <Button disabled={loading} onClick={redirectToCustomerPortal}>
+    <ShimmerButton className="relative z-20 mt-8" disabled={loading} onClick={redirectToCustomerPortal} >
       {loading ? (
         <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Please Wait
+          <Loader2 className="mr-2 h-4 w-4 animate-spin z-20" />
+          poczekaj...
         </>
       ) : (
-        "change your subscription"
+        "Zarządzaj subskrybcją"
       )}
-    </Button>
+    </ShimmerButton>
   );
 };
 

@@ -7,13 +7,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavMenu } from "@/components/ui/NavMenu";
+import { SubscriptionButton } from "@/components/ui/ui/subscriptionButton";
 import { SignOutButton } from "./signoutButton";
 import { APP_NAME } from "@/common/constants";
 import { SignInButton } from "./signInButton";
 import QuizzlyLogo from "./quizzlyLogo";
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { SubscriptionsMapping, users } from "@/db/schema";
 
 const Header = async () => {
   const session = await auth();
+
+  var plan;
+  
+  if (!session || !session.user || !session.user.id) {
+    plan = null;
+  } else {
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.user.id),
+    });
+    const subscription = user?.subscription || "free";
+    plan = SubscriptionsMapping[subscription];
+  }
 
   const handleSignOut = async () => {
     "use server";
@@ -30,7 +46,7 @@ const Header = async () => {
           </div>
           {session?.user ? (
             <div className="flex items-center gap-4">
-              {session.user.name && session.user.image && (
+              {session.user.name && session.user.image && plan && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost">
@@ -43,9 +59,10 @@ const Header = async () => {
                       />
                     </Button>
                   </DropdownMenuTrigger>
-                  <NavMenu />
+                  <NavMenu plan={plan} />
                 </DropdownMenu>
               )}
+              {plan && <SubscriptionButton plan={plan} />}
               <SignOutButton handleSignOut={handleSignOut} />
             </div>
           ) : (

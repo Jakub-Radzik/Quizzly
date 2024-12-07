@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-export function NavMenu() {
+export function NavMenu({ plan }: { plan: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,10 +30,19 @@ export function NavMenu() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/quiz/new" className="flex flex-row">
-              <FileText className="mr-2 h-4 w-4" />
-              <span>New quiz</span>
-            </Link>
+            {
+              plan === "Basic" ? (
+                <div className="flex flex-row text-gray-500">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>New quiz</span>
+                </div>
+              ) : (
+                <Link href="/quiz/new" className="flex flex-row">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>New quiz</span>
+                </Link>
+              )
+            }
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
