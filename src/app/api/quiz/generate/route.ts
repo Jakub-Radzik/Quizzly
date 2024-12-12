@@ -5,6 +5,9 @@ import { HumanMessage } from "@langchain/core/messages";
 
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { JsonOutputFunctionsParser } from "langchain/output_parsers";
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { SubscriptionsMapping, users } from "@/db/schema";
 
 import saveQuiz from "./saveToDb";
 import saveToS3 from "./saveToS3";
@@ -29,6 +32,17 @@ export async function POST(req: NextRequest) {
     throw new Error("Session was not found! Cant generate quiz");
   }
 
+  // Check if user can generate quiz
+  // ----------------------------------------------------------------------------
+  const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
+  const subscription = user?.subscription || "free";
+  if (subscription === "free") {
+    return NextResponse.json(
+      { error: "User does not have sufficient subscription level to generate quizzes" },
+      { status: 403 }
+    );
+  }
+
   const document = body.get("pdf");
   console.log("got pdf");
 
@@ -43,12 +57,12 @@ export async function POST(req: NextRequest) {
 
     // Save the document to S3
     // ----------------------------------------------------------------------------
-    /* const { file_id, file_name, error } = await saveToS3(document as File) */
-    /* if (error || !file_id || !file_name) { */
-    /*   return NextResponse.json({ error }, { status: 500 }) */
-    /* } */
-    const file_id = "file_id";
-    const file_name = "file_name";
+    const { file_id, file_name, error } = await saveToS3(document as File)
+    if (error || !file_id || !file_name) {
+      return NextResponse.json({ error }, { status: 500 })
+    }
+    /* const file_id = "file_id"; */
+    /* const file_name = "file_name"; */
     console.log("saved to s3");
 
     // Extract the text from the document
