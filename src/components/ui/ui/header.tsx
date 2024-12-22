@@ -14,20 +14,21 @@ import { SignInButton } from "./signInButton";
 import QuizzlyLogo from "./quizzlyLogo";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { SubscriptionsMapping, users } from "@/db/schema";
+import { Subscriptions, SubscriptionsMapping, users } from "@/db/schema";
 
 const Header = async () => {
   const session = await auth();
 
   var plan;
-  
+
   if (!session || !session.user || !session.user.id) {
     plan = null;
   } else {
     const user = await db.query.users.findFirst({
       where: eq(users.id, session.user.id),
     });
-    const subscription = user?.subscription || "free";
+    const subscription = (user?.subscription ||
+      "free") as unknown as Subscriptions;
     plan = SubscriptionsMapping[subscription];
   }
 

@@ -3,7 +3,7 @@ import UploadDoc from "../UploadDoc";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { SubscriptionsMapping, users } from "@/db/schema";
+import { Subscriptions, SubscriptionsMapping, users } from "@/db/schema";
 import ManageSubscription from "@/app/(user)/billing/ManageSubscription";
 
 const page = async () => {
@@ -11,14 +11,15 @@ const page = async () => {
 
   const userId = session?.user?.id;
   var plan;
-  
+
   if (!userId) {
     plan = null;
   } else {
     const user = await db.query.users.findFirst({
       where: eq(users.id, userId),
     });
-    const subscription = user?.subscription || "free";
+    const subscription = (user?.subscription ||
+      "free") as unknown as Subscriptions;
     plan = SubscriptionsMapping[subscription];
   }
 
@@ -38,18 +39,20 @@ const page = async () => {
 
       <div className="flex flex-col flex-1 z-50">
         <main className="py-11 flex flex-col text-center gap-4 items-center flex-1 mt-24">
-          {
-            userId ? (
-              plan !== "Basic" ?
-              <UploadDoc userId={userId}/>
-              : (
-                  <div>
-                    <p className="text-3xl">Ulepsz swój plan, aby generować quizy!</p>
-                    <ManageSubscription />
-                  </div>
-                )
-            ): <p>Użytkownik nie znaleziony</p>
-          }
+          {userId ? (
+            plan !== "Basic" ? (
+              <UploadDoc userId={userId} />
+            ) : (
+              <div>
+                <p className="text-3xl">
+                  Ulepsz swój plan, aby generować quizy!
+                </p>
+                <ManageSubscription />
+              </div>
+            )
+          ) : (
+            <p>Użytkownik nie znaleziony</p>
+          )}
         </main>
       </div>
     </div>

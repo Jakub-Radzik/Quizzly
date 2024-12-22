@@ -19,26 +19,29 @@ export enum Subscriptions {
 }
 
 export const SubscriptionsMapping = {
-  "free": "Basic",
-  "standard": "Standard",
-  "deluxe": "Deluxe",
-}
+  free: "Basic",
+  standard: "Standard",
+  deluxe: "Deluxe",
+};
 
-export const users = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  stripeCustomerId: text("stripe_customer_id"),
-  subscription: text("subscription")
-    .notNull()
-    .default(Subscriptions.free)
+export const users = pgTable(
+  "user",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    email: text("email").notNull(),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    image: text("image"),
+    stripeCustomerId: text("stripe_customer_id"),
+    subscription: text("subscription").notNull().default(Subscriptions.free),
   },
   (table) => ({
-    checkConstraint: check("subscription", sql`${table.subscription} in (${Object.values(Subscriptions)})`),
+    checkConstraint: check(
+      "subscription",
+      sql`${table.subscription} in (${Object.values(Subscriptions)})`
+    ),
   })
 );
 
@@ -53,6 +56,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    // @ts-ignore
     type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),

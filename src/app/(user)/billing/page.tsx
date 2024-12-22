@@ -1,11 +1,11 @@
 import React from "react";
 import { auth, signIn } from "@/auth";
 import { db } from "@/db";
-import { SubscriptionsMapping, users } from "@/db/schema";
+import { Subscriptions, SubscriptionsMapping, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import ManageSubscription from "./ManageSubscription";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { CardTitle } from '@/components/ui/card'
+import { CardTitle } from "@/components/ui/card";
 
 const page = async () => {
   const session = await auth();
@@ -19,13 +19,15 @@ const page = async () => {
     where: eq(users.id, session.user.id),
   });
 
-  const plan = user?.subscription || "free";
+  const plan = (user?.subscription || "free") as unknown as Subscriptions;
   const planName = SubscriptionsMapping[plan];
 
   return (
     <div className="flex flex-col items-center justify-center my-6 py-6">
       <CardSpotlight className="h-92 w-96 mt-4 ">
-        <CardTitle className="text-2xl mb-3 relative z-20">Szczegóły subskrybcji</CardTitle>
+        <CardTitle className="text-2xl mb-3 relative z-20">
+          Szczegóły subskrybcji
+        </CardTitle>
         <div className="text-neutral-200 mt-4 relative z-20">
           Obecnie korzystasz z planu <b>{planName}</b>:
           <ul className="list-none mt-2">
@@ -44,10 +46,10 @@ const page = async () => {
 const Step = ({ title, positive }: { title: string; positive: boolean }) => {
   return (
     <li className="flex gap-2 items-start">
-      {positive? '✓': '✗'}
-      < p className="text-white">{title}</p>
+      {positive ? "✓" : "✗"}
+      <p className="text-white">{title}</p>
     </li>
   );
-}
+};
 
 export default page;

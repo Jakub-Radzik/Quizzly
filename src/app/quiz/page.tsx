@@ -76,6 +76,7 @@ export default function Home() {
     }
   };
 
+  // @ts-ignore
   const handleAnswer = (answer) => {
     setSelectedAnswer(answer.id);
     const isCurrentCorrect = answer.isCorrect;
@@ -145,6 +146,7 @@ export default function Home() {
         <footer className="footer pb-9 px-6 relative mb-0">
           <ResultCard
             isCorrect={isCorrect}
+            // @ts-ignore
             correctAnswer={
               questions[currentQuestion].answers.find(
                 (answer) => answer.isCorrect
