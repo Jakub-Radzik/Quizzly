@@ -19,21 +19,32 @@ const page = async () => {
 
   return (
     <>
-      <div className="mt-4"></div>
+      <div className="mt-4" />
       <ProfileCard />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {userData && userData.length > 0
-          ? userData.map((metric) => (
-              <MetricCard
-                key={metric.label}
-                label={metric.label}
-                value={metric.value}
-              />
-            ))
-          : null}
+      <div className="max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {userData && userData.length > 0
+            ? userData.map((metric) => (
+                <MetricCard
+                  key={metric.label}
+                  label={metric.label}
+                  value={metric.value}
+                />
+              ))
+            : null}
+        </div>
       </div>
-      <div>
-        {heatMapData ? <SubmissionsHeatMap data={heatMapData.data} /> : null}
+
+      <div className="flex justify-center items-center p-4 sm:p-6 lg:p-8">
+        {heatMapData ? (
+          <div className="w-full max-w-2xl">
+            <SubmissionsHeatMap data={heatMapData.data} />
+          </div>
+        ) : (
+          <p className="text-gray-400 text-sm sm:text-base text-center">
+            Loading heatmap data...
+          </p>
+        )}
       </div>
       <QuizListServer />
     </>

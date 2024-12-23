@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Tooltip from "@uiw/react-tooltip";
 import HeatMap from "@uiw/react-heat-map";
 import { convertDateToString } from "@/lib/utils";
@@ -34,6 +34,20 @@ const panelColors = {
 const SubmissionsHeatMap = (props: Props) => {
   const currentYear = new Date().getFullYear();
 
+  const [heatMapWidth, setHeatMapWidth] = useState(700);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      setHeatMapWidth(window.innerWidth < 750 ? window.innerWidth - 50 : 700);
+    };
+
+    updateWidth();
+
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
   const groupByDate = (data: Props["data"]): GroupedResult => {
     return data.reduce<GroupedResult>((acc, item) => {
       const date = convertDateToString(item.createdAt);
@@ -58,7 +72,7 @@ const SubmissionsHeatMap = (props: Props) => {
   return (
     <HeatMap
       value={formattedDates}
-      width={700}
+      width={heatMapWidth}
       rectSize={12}
       style={{ color: "#888" }}
       startDate={new Date(`${currentYear}/01/01`)}

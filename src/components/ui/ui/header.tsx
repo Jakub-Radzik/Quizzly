@@ -43,14 +43,16 @@ const Header = async () => {
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <div className="flex">
             <QuizzlyLogo />
-            <h1 className="text-3xl font-bold pl-4 pt-1">{APP_NAME}</h1>
+            <h1 className="text-3xl font-bold pl-4 pt-1 hidden md:block">
+              {APP_NAME}
+            </h1>
           </div>
           {session?.user ? (
             <div className="flex items-center gap-4">
               {session.user.name && session.user.image && plan && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
+                    <Button variant="ghost" className="hidden md:block">
                       <Image
                         src={session.user.image}
                         alt={session.user.name}
@@ -63,7 +65,9 @@ const Header = async () => {
                   <NavMenu plan={plan} />
                 </DropdownMenu>
               )}
-              {plan && <SubscriptionButton plan={plan} />}
+              <div className="hidden md:block">
+                {plan && <SubscriptionButton plan={plan} />}
+              </div>
               <SignOutButton handleSignOut={handleSignOut} />
             </div>
           ) : (
