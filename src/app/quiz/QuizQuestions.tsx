@@ -188,9 +188,7 @@ export default function QuizQuestions({ quiz }: Props) {
       <main className="flex justify-center flex-1">
         {!started ? (
           <StartQuiz
-            name={quiz.name}
-            description={quiz.description}
-            quizLength={quiz.questions.length}
+            quizData={quiz}
             onStart={handleNext}
           />
         ) : (
