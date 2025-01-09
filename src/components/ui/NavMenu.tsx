@@ -30,19 +30,17 @@ export function NavMenu({ plan }: { plan: string }) {
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            {
-              plan === "Basic" ? (
-                <div className="flex flex-row text-gray-500">
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span>New quiz</span>
-                </div>
-              ) : (
-                <Link href="/quiz/new" className="flex flex-row">
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span>New quiz</span>
-                </Link>
-              )
-            }
+            {plan === "Basic" ? (
+              <div className="flex flex-row text-gray-500">
+                <FileText className="mr-2 h-4 w-4" />
+                <span>New quiz</span>
+              </div>
+            ) : (
+              <Link href="/quiz/new" className="flex flex-row">
+                <FileText className="mr-2 h-4 w-4" />
+                <span>New quiz</span>
+              </Link>
+            )}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -54,20 +52,20 @@ export function NavMenu({ plan }: { plan: string }) {
               <span>Dashboard</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem>
             <Link href="/billing" className="flex flex-row">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Billing</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
