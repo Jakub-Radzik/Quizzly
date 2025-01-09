@@ -54,16 +54,6 @@ const exampleQuiz = {
 };
 
 export async function exportMoodle(quizData: unknown) {
-  // const quiz = await db.query.quizzes.findFirst({
-  //     where: eq(quizzes.id, quizId),
-  //     with: {
-  //         questions: {
-  //             with: {
-  //                 answers: true,
-  //             },
-  //         },
-  //     },
-  // });
   // @ts-ignore
   if (!quizData || quizData.questions.length === 0) {
     throw Error("Empty quiz");
