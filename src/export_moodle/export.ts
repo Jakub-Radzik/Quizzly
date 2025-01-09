@@ -1,7 +1,3 @@
-import { db } from "@/db";
-import { quizzes } from "@/db/schema";
-import { eq } from "drizzle-orm";
-
 const exampleQuiz = {
   id: 1,
   name: "exampleQuiz",
