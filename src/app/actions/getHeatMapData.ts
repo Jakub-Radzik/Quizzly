@@ -1,7 +1,7 @@
-import { quizzes, questions, quizSubmissions, users } from "@/db/schema";
+import { quizzes, quizSubmissions, users } from "@/db/schema";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { count, eq, avg, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const getHeatMapData = async () => {
   const session = await auth();

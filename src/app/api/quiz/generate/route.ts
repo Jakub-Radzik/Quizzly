@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage } from "@langchain/core/messages";
-
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { JsonOutputFunctionsParser } from "langchain/output_parsers";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { SubscriptionsMapping, users } from "@/db/schema";
+import { users } from "@/db/schema";
 
 import saveQuiz from "./saveToDb";
 import saveToS3 from "./saveToS3";
@@ -38,7 +34,10 @@ export async function POST(req: NextRequest) {
   const subscription = user?.subscription || "free";
   if (subscription === "free") {
     return NextResponse.json(
-      { error: "User does not have sufficient subscription level to generate quizzes" },
+      {
+        error:
+          "User does not have sufficient subscription level to generate quizzes",
+      },
       { status: 403 }
     );
   }
@@ -57,12 +56,10 @@ export async function POST(req: NextRequest) {
 
     // Save the document to S3
     // ----------------------------------------------------------------------------
-    const { file_id, file_name, error } = await saveToS3(document as File)
+    const { file_id, file_name, error } = await saveToS3(document as File);
     if (error || !file_id || !file_name) {
-      return NextResponse.json({ error }, { status: 500 })
+      return NextResponse.json({ error }, { status: 500 });
     }
-    /* const file_id = "file_id"; */
-    /* const file_name = "file_name"; */
     console.log("saved to s3");
 
     // Extract the text from the document
@@ -74,81 +71,6 @@ export async function POST(req: NextRequest) {
 
     const texts = selectedDocuments.map((doc) => doc.pageContent);
     console.log(texts);
-
-    // Generate the quiz
-    // ----------------------------------------------------------------------------
-    /* const prompt = */
-    /*   'given the text which is a summar of the document, generate a quiz based on the text. Return json only that contains a quiz object with fields: name, description, and questions. The questions is an array of object with fields: questionText, answers. The answers is an array of objects with fields: answerText, isCorrect.' */
-    /**/
-    /* if (!process.env.OPENAI_API_KEY) { */
-    /*   return NextResponse.json( */
-    /*     { error: 'OpenAI API key not provided' }, */
-    /*     { status: 500 }, */
-    /*   ) */
-    /* } */
-    /* console.log('have openAI key') */
-    /**/
-    /* const model = new ChatOpenAI({ */
-    /*   openAIApiKey: process.env.OPENAI_API_KEY, */
-    /*   modelName: 'gpt-4-1106-preview', */
-    /* }) */
-    /**/
-    /* const parser = new JsonOutputFunctionsParser() */
-    /* const extractionFunctionSchema = { */
-    /*   name: 'extractor', */
-    /*   description: 'Extracts fields from output', */
-    /*   parameters: { */
-    /*     type: 'object', */
-    /*     properties: { */
-    /*       quiz: { */
-    /*         type: 'object', */
-    /*         properties: { */
-    /*           name: { type: 'string' }, */
-    /*           description: { type: 'string' }, */
-    /*           questions: { */
-    /*             type: 'array', */
-    /*             items: { */
-    /*               type: 'object', */
-    /*               properties: { */
-    /*                 questionText: { type: 'string' }, */
-    /*                 answers: { */
-    /*                   type: 'array', */
-    /*                   items: { */
-    /*                     type: 'object', */
-    /*                     properties: { */
-    /*                       answerText: { type: 'string' }, */
-    /*                       isCorrect: { type: 'boolean' }, */
-    /*                     }, */
-    /*                   }, */
-    /*                 }, */
-    /*               }, */
-    /*             }, */
-    /*           }, */
-    /*         }, */
-    /*       }, */
-    /*     }, */
-    /*   }, */
-    /* } */
-    /**/
-    /* const runnable = model */
-    /*   .bind({ */
-    /*     functions: [extractionFunctionSchema], */
-    /*     function_call: { name: 'extractor' }, */
-    /*   }) */
-    /*   .pipe(parser) */
-    /* console.log('bind and pipe') */
-    /**/
-    /* const message = new HumanMessage({ */
-    /*   content: [ */
-    /*     { */
-    /*       type: 'text', */
-    /*       text: prompt + '\n' + texts.join('\n'), */
-    /*     }, */
-    /*   ], */
-    /* }) */
-    /**/
-    /* const result = (await runnable.invoke([message])) as { quiz: Quiz } */
-    /* console.log(result) */
 
     console.log("before lambda");
     // Generate the quiz using AWS Lambda

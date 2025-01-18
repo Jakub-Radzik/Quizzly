@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { quizSubmissions, users } from "@/db/schema";
+import { quizSubmissions } from "@/db/schema";
 import { auth } from "@/auth";
 import { InferInsertModel, and, eq } from "drizzle-orm";
 
